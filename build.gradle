@@ -88,11 +88,10 @@ publishing {
 bintray {
     user = "hydos"
     key = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_KEY')
-	println(key)
     publications = ["maven"]
     publish = true
     pkg {
-        repo = "badlion"
+        repo = "bmg"
         name = "badliongradle"
         userOrg = "hydos"
         licenses = ["Apache-2"]
