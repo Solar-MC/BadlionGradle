@@ -1,9 +1,11 @@
 plugins {
     id 'java'
     id 'maven-publish'
+	id 'maven'
     id 'java-gradle-plugin'
     id 'idea'
     id 'eclipse'
+id 'com.jfrog.bintray' version '1.8.4'
     id 'groovy'
 }
 
@@ -64,14 +66,34 @@ gradlePlugin {
     }
 }
 
+publishing {
+    publications {
+        maven(MavenPublication) {
+            artifact(file("${project.buildDir}/libs/${project.archivesBaseName}-${project.version}.jar")) {
+                builtBy build
+            }
+            groupId 'io.github.badlionmoddinggroup'
+            artifactId 'badliongradle'
+            version = project.version
+        }
+    }
+
+    // select the repositories you want to publish to
+    repositories {
+        // uncomment to publish to the local maven
+        // mavenLocal()
+    }
+}
+
 bintray {
     user = "hydos"
     key = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_KEY')
-    publications = ["MyPublication"]
+	println(key)
+    publications = ["maven"]
     publish = true
     pkg {
         repo = "badlion"
-        name = "config-2"
+        name = "badliongradle"
         userOrg = "hydos"
         licenses = ["Apache-2"]
         version {
