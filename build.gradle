@@ -1,15 +1,66 @@
 plugins {
     id 'java'
+    id 'maven-publish'
+    id 'java-gradle-plugin'
+    id 'idea'
+    id 'eclipse'
+    id 'groovy'
 }
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 group 'io.github.badlionmoddinggroup'
 version '1.0-SNAPSHOT'
 
 repositories {
+    maven {
+        name = "Fabric"
+        url = 'https://maven.fabricmc.net/'
+    }
     mavenCentral()
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
     implementation gradleApi()
+
+    // libraries
+    implementation ('commons-io:commons-io:2.6')
+    implementation ('org.zeroturnaround:zt-zip:1.13')
+    implementation ('com.google.code.gson:gson:2.8.5')
+    implementation ('com.google.guava:guava:28.0-jre')
+
+    // game handling utils
+    implementation ('net.fabricmc:stitch:0.4.6+build.74') {
+        exclude module: 'enigma'
+    }
+
+    // tinyfile management
+    implementation ('net.fabricmc:tiny-remapper:0.3.0.70')
+    implementation ('net.fabricmc:tiny-mappings-parser:0.2.2.14')
+
+    implementation ('net.fabricmc:lorenz-tiny:2.0.0+build.2') {
+        transitive = false
+    }
+
+    // decompilers
+    implementation ('net.fabricmc:procyon-fabric-compilertools:0.5.35.13')
+    implementation ('org.jetbrains:intellij-fernflower:1.2.1.16')
+
+    // source code remapping
+    implementation ('org.cadixdev:mercury:0.1.0.fabric-SNAPSHOT')
+
+    // enigma
+    implementation ('cuchaz:enigma-swing:0.20+build.199')
+
 }
+
+gradlePlugin {
+    plugins {
+        plugin {
+            id = 'badlion-gradle'
+            implementationClass = 'io.github.badlionmoddinggroup.badliongradle.BadlionGradle'
+        }
+    }
+}
+

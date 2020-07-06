@@ -11,7 +11,7 @@ public class SetupBadlionCode extends DefaultTask {
 
     @TaskAction
     public void run() {
-        BadlonGradle.project.getProjectDir();
+        BadlionGradle.project.getProjectDir();
     }
 
 }
