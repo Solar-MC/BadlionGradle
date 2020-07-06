@@ -93,7 +93,7 @@ bintray {
     pkg {
         repo = "bmg"
         name = "badliongradle"
-        userOrg = "hydos"
+        userOrg = "badlion"
         licenses = ["Apache-2"]
         version {
             name = "BadlionGradle"
