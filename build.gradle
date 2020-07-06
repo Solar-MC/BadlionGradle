@@ -64,3 +64,27 @@ gradlePlugin {
     }
 }
 
+bintray {
+    user = "hydos"
+    key = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_KEY')
+    publications = ["MyPublication"]
+    publish = true
+    pkg {
+        repo = "badlion"
+        name = "config-2"
+        userOrg = "hydos"
+        licenses = ["Apache-2"]
+        version {
+            name = "BadlionGradle"
+            released = new Date()
+            desc = "Gradle plugin for managing badlion modding stuff"
+            githubRepo = 'BadlionModdingGroup/BadlionGradle'
+            websiteUrl = 'https://github.com/BadlionModdingGroup'
+            issueTrackerUrl = 'https://github.com/BadlionModdingGroup/BadlionGradle/issues'
+            vcsUrl = 'https://github.com/BadlionModdingGroup/BadlionGradle/BadlionGradle.git'
+            gpg {
+                sign = true
+            }
+        }
+    }
+}
