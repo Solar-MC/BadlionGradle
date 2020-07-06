@@ -7,7 +7,7 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: windows
 
     steps:
     - uses: actions/checkout@v1
@@ -16,9 +16,8 @@ jobs:
       with:
         java-version: 1.8
     - name: Upload to Bintray
-      run: ./gradlew clean bintrayUpload
+      run: gradlew clean bintrayUpload
       env:
         BINTRAY_USER: hydos
         OSS_TOKEN: hydos
         BINTRAY_KEY: ${{ secrets.BINTRAY_KEY }}
-        OSS_PASS: ${{ secrets.OSS_PASS }}
