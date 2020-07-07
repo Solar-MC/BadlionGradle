@@ -22,12 +22,12 @@ import java.io.*;
 import java.net.URL;
 import java.nio.file.Path;
 
-public class PrepareJars extends DefaultTask {
+public class PrepareJarsTask extends DefaultTask {
 
     public static final String MINECRAFT_MAPPINGS = "https://gist.githubusercontent.com/hYdos/f3b3190fb3437c4a3f309e3060a9aec0/raw/506dd9c32ec772e934a60a95c8b125d427c8a4cf/1.8.9.tiny";
     public static final String BADLION_MAPPINGS = "https://raw.githubusercontent.com/BadlionModdingGroup/badlionIntermediaries/master/intermediaries/v2.15.0-10acb43-PRODUCTION.tiny";
 
-    public PrepareJars() {
+    public PrepareJarsTask() {
         setGroup("mapping");
     }
 

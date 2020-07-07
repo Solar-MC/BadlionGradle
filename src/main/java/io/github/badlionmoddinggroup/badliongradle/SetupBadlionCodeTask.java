@@ -3,9 +3,9 @@ package io.github.badlionmoddinggroup.badliongradle;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.tasks.TaskAction;
 
-public class SetupBadlionCode extends DefaultTask {
+public class SetupBadlionCodeTask extends DefaultTask {
 
-    public SetupBadlionCode(){
+    public SetupBadlionCodeTask(){
         setGroup("badlion");
     }
 

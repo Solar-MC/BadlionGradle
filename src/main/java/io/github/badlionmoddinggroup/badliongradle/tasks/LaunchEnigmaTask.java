@@ -7,9 +7,9 @@ import org.gradle.api.tasks.TaskAction;
 
 import java.io.IOException;
 
-public class LaunchEnigma extends DefaultTask {
+public class LaunchEnigmaTask extends DefaultTask {
 
-    public LaunchEnigma(){
+    public LaunchEnigmaTask(){
         setGroup("mapping");
     }
 
