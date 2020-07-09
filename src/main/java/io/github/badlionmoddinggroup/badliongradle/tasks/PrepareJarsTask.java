@@ -25,7 +25,7 @@ import java.nio.file.Path;
 public class PrepareJarsTask extends DefaultTask {
 
     public static final String MINECRAFT_MAPPINGS = "https://gist.githubusercontent.com/hYdos/f3b3190fb3437c4a3f309e3060a9aec0/raw/506dd9c32ec772e934a60a95c8b125d427c8a4cf/1.8.9.tiny";
-    public static final String BADLION_MAPPINGS = "https://gist.githubusercontent.com/hYdos/50943e4ac0523ee85604ff7562dd5f27/raw/fe035353409f6c332e26407994c94ea28e919c93/v2.15.0-837a25b-PRODUCTION.tiny";
+    public static final String BADLION_MAPPINGS = "https://raw.githubusercontent.com/BadlionModdingGroup/badlionIntermediaries/master/intermediaries/v2.15.0-603fa73-PRODUCTION.tiny";
 
     public PrepareJarsTask() {
         setGroup("mapping");
