@@ -53,7 +53,8 @@ dependencies {
     implementation ('org.cadixdev:mercury:0.1.0.fabric-SNAPSHOT')
 
     // enigma
-    implementation ('cuchaz:enigma-swing:0.20+build.199')
+    implementation ('cuchaz:enigma-swing:0.20+build.206')
+    implementation ('cuchaz:enigma-cli:0.20+build.206')
 
 }
 

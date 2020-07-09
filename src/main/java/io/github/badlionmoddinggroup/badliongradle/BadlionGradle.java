@@ -1,9 +1,6 @@
 package io.github.badlionmoddinggroup.badliongradle;
 
-import io.github.badlionmoddinggroup.badliongradle.tasks.GenerateClientTask;
-import io.github.badlionmoddinggroup.badliongradle.tasks.GrabVersionInfo;
-import io.github.badlionmoddinggroup.badliongradle.tasks.LaunchEnigmaTask;
-import io.github.badlionmoddinggroup.badliongradle.tasks.PrepareJarsTask;
+import io.github.badlionmoddinggroup.badliongradle.tasks.*;
 import org.cadixdev.lorenz.MappingSet;
 import org.cadixdev.lorenz.model.ClassMapping;
 import org.cadixdev.lorenz.model.InnerClassMapping;
@@ -38,6 +35,7 @@ public class BadlionGradle implements Plugin<Project> {
         tasks.register("prepareJars", PrepareJarsTask.class, task -> task.dependsOn("generateClient"));
         tasks.register("generateClient", GenerateClientTask.class, task -> task.dependsOn("grabVersionInfo"));
         tasks.register("grabVersionInfo", GrabVersionInfo.class);
+        tasks.register("buildMappings", BuildMappingsTask.class);
     }
 
     /**
