@@ -21,10 +21,11 @@ import org.gradle.api.tasks.TaskAction;
 import java.io.*;
 import java.net.URL;
 import java.nio.file.Path;
+import java.util.Locale;
 
 public class PrepareJarsTask extends DefaultTask {
 
-    public static final String MINECRAFT_MAPPINGS = "https://gist.githubusercontent.com/hYdos/7ee307bf5068650b61fb90c161546d75/raw/3888ad22908f3fa2aab8b8ce58f4e95bbb15f333/1.8.9-BadlionVersion.tiny";
+    public static final String MINECRAFT_MAPPINGS = "https://gist.githubusercontent.com/hYdos/d8a7e36b960a393672e886bcd5949285/raw/4bb1764506c36fd70e0ede2beb0587c21bb4446b/1.8.9-LATEST-AUG17.tiny";
     public static final String BADLION_MAPPINGS = "https://raw.githubusercontent.com/BadlionModdingGroup/badlionIntermediaries/master/intermediaries/v2.16.2-877fa01-PRODUCTION.tiny";
 
     public PrepareJarsTask() {
@@ -38,7 +39,16 @@ public class PrepareJarsTask extends DefaultTask {
         FileUtils.deleteDirectory(BadlionGradle.getCacheFolder());
 
         Profiler.setState("Copying original Badlion Jar");
-        FileUtils.copyFile(new File(System.getProperty("user.home") + "/AppData/Roaming/.minecraft/versions/BLClient18/BLClient.jar"), new File(BadlionGradle.getCacheFolder().getAbsolutePath() + "/badlionOfficial.jar"));
+        String clientJarLocation = "CLIENTJARLOCATION IS BROKEN";
+        switch (OsChecker.getType()){
+            case Windows:
+                clientJarLocation = System.getProperty("user.home") + "/AppData/Roaming/.minecraft/versions/BLClient18/BLClient.jar";
+                break;
+            case Linux:
+                ///home/hayden/.wine/drive_c/users/hayden/Application Data/.minecraft
+                clientJarLocation = System.getProperty("user.home") + "/.wine/drive_c/users/" + System.getProperty("user.name") + "/Application Data/.minecraft/versions/BLClient18/BLClient.jar";
+        }
+        FileUtils.copyFile(new File(clientJarLocation), new File(BadlionGradle.getCacheFolder().getAbsolutePath() + "/badlionOfficial.jar"));
 
         Profiler.setState("Download mappings");
         IOUtils.copy(new URL(MINECRAFT_MAPPINGS).openStream(), new FileOutputStream(BadlionGradle.getCacheFile("1.8.9.tiny")));
@@ -98,6 +108,30 @@ public class PrepareJarsTask extends DefaultTask {
 
         Profiler.setState("Remove Minecraft");
         SourceRemover.main(new String[]{output.toAbsolutePath().toString(), unMinecraftedOutput.toAbsolutePath().toString()});
+    }
+
+    public static final class OsChecker {
+        public enum OSType {
+            Windows, MacOS, Linux, Other
+        };
+
+        protected static OSType detectedOS;
+
+        public static OSType getType() {
+            if (detectedOS == null) {
+                String OS = System.getProperty("os.name", "generic").toLowerCase(Locale.ENGLISH);
+                if ((OS.contains("mac")) || (OS.contains("darwin"))) {
+                    detectedOS = OSType.MacOS;
+                } else if (OS.contains("win")) {
+                    detectedOS = OSType.Windows;
+                } else if (OS.contains("nux")) {
+                    detectedOS = OSType.Linux;
+                } else {
+                    detectedOS = OSType.Other;
+                }
+            }
+            return detectedOS;
+        }
     }
 
 }
