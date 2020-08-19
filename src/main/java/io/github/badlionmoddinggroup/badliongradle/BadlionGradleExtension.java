@@ -8,7 +8,10 @@ public class BadlionGradleExtension {
     public String minecraftMappingsUrl;
     public String badlionMappingsUrl;
 
-    public BadlionGradleExtension(Project project) {
+    //stuff not done through gradle extension
+    private final Project project;
 
+    public BadlionGradleExtension(Project project) {
+        this.project = project;
     }
 }

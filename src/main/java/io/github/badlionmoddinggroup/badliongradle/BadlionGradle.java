@@ -10,16 +10,25 @@ import org.gradle.api.Project;
 import org.gradle.api.tasks.TaskContainer;
 
 import java.io.File;
+import java.util.Locale;
 import java.util.function.Consumer;
 
 public class BadlionGradle implements Plugin<Project> {
 
-    public static File getCacheFolder(Project project) {
+    public static File getProjectCacheFolder(Project project) {
         return new File(project.getRootDir().getAbsolutePath() + "/.gradle/badlion-cache/");
     }
 
-    public static File getCacheFile(Project project, String fileName) {
-        return new File(getCacheFolder(project).getAbsolutePath() + "/" + fileName);
+    public static File getProjectCacheFile(Project project, String fileName) {
+        return new File(getProjectCacheFolder(project).getAbsolutePath() + "/" + fileName);
+    }
+
+    public static File getVersionCache(Project project, String version){
+        return new File(project.getGradle().getGradleUserHomeDir(), "caches/badlion-gradle-cache/" + version);
+    }
+
+    public static BadlionGradleExtension getGradleExtension(Project project){
+         return project.getExtensions().getByType(BadlionGradleExtension.class);
     }
 
     @Override
@@ -53,6 +62,30 @@ public class BadlionGradle implements Plugin<Project> {
 
         for (InnerClassMapping innerClassMapping : classMapping.getInnerClassMappings()) {
             iterateClass(innerClassMapping, consumer);
+        }
+    }
+
+    public static final class OsChecker {
+        public enum OSType {
+            Windows, MacOS, Linux, Other
+        };
+
+        protected static OSType detectedOS;
+
+        public static OSType getType() {
+            if (detectedOS == null) {
+                String OS = System.getProperty("os.name", "generic").toLowerCase(Locale.ENGLISH);
+                if ((OS.contains("mac")) || (OS.contains("darwin"))) {
+                    detectedOS = OSType.MacOS;
+                } else if (OS.contains("win")) {
+                    detectedOS = OSType.Windows;
+                } else if (OS.contains("nux")) {
+                    detectedOS = OSType.Linux;
+                } else {
+                    detectedOS = OSType.Other;
+                }
+            }
+            return detectedOS;
         }
     }
 
