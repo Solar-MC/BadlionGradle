@@ -19,16 +19,16 @@ public class BadlionGradle implements Plugin<Project> {
         return new File(project.getRootDir().getAbsolutePath() + "/.gradle/badlion-cache/");
     }
 
-    public static File getProjectCacheFile(Project project, String fileName) {
-        return new File(getProjectCacheFolder(project).getAbsolutePath() + "/" + fileName);
+    public static File getVersionCacheFile(Project project, String version, String fileName) {
+        return new File(getVersionCache(project, version).getAbsolutePath() + "/" + fileName);
     }
 
-    public static File getVersionCache(Project project, String version){
+    public static File getVersionCache(Project project, String version) {
         return new File(project.getGradle().getGradleUserHomeDir(), "caches/badlion-gradle-cache/" + version);
     }
 
-    public static BadlionGradleExtension getGradleExtension(Project project){
-         return project.getExtensions().getByType(BadlionGradleExtension.class);
+    public static BadlionGradleExtension getGradleExtension(Project project) {
+        return project.getExtensions().getByType(BadlionGradleExtension.class);
     }
 
     @Override
@@ -68,7 +68,7 @@ public class BadlionGradle implements Plugin<Project> {
     public static final class OsChecker {
         public enum OSType {
             Windows, MacOS, Linux, Other
-        };
+        }
 
         protected static OSType detectedOS;
 

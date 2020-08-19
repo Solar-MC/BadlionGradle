@@ -16,7 +16,7 @@ public class BuildMappingsTask extends DefaultTask {
     @TaskAction
     public void run() throws Exception {
         File file = new File(getProject().getRootDir() + "/build/officialtonamed.tiny");
-        File intermediaryLocation = BadlionGradle.getProjectCacheFile(getProject(), "badlionIntermediaries.tiny");
+        File intermediaryLocation = BadlionGradle.getVersionCacheFile(getProject(), BadlionGradle.getGradleExtension(getProject()).badlionVersion, "badlionIntermediaries.tiny");
         file.mkdirs();
         file.createNewFile();
         Main.main("convert-mappings", "enigma", getProject().getRootDir() + "/mappings", "tiny_v2:official:named", getProject().getRootDir() + "/build/officialtonamed.tiny");
