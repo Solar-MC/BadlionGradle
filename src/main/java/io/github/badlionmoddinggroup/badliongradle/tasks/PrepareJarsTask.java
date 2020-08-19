@@ -102,7 +102,13 @@ public class PrepareJarsTask extends DefaultTask {
 
     private MappingSet prepareMappings(String blcVer) throws IOException {
         Profiler.setState("Download mappings");
-        IOUtils.copy(new URL(BadlionGradle.getGradleExtension(getProject()).minecraftMappingsUrl).openStream(), new FileOutputStream(BadlionGradle.getVersionCacheFile(getProject(), blcVer, "1.8.9.tiny")));
+        File oneeightnineMappingsFile = BadlionGradle.getVersionCacheFile(getProject(), blcVer, "1.8.9.tiny");
+        if(!oneeightnineMappingsFile.exists()){
+            oneeightnineMappingsFile.mkdirs();
+            oneeightnineMappingsFile.createNewFile();
+        }
+        FileOutputStream oneeightnineMappings = new FileOutputStream(oneeightnineMappingsFile);
+        IOUtils.copy(new URL(BadlionGradle.getGradleExtension(getProject()).minecraftMappingsUrl).openStream(), oneeightnineMappings);
         IOUtils.copy(new URL(BadlionGradle.getGradleExtension(getProject()).badlionMappingsUrl).openStream(), new FileOutputStream(BadlionGradle.getVersionCacheFile(getProject(), blcVer, "badlionIntermediaries.tiny")));
 
         Profiler.setState("Read Tiny files");
