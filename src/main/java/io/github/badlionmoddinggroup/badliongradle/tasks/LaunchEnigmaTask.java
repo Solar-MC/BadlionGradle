@@ -15,7 +15,7 @@ public class LaunchEnigmaTask extends DefaultTask {
 
     @TaskAction
     public void run() throws IOException {
-        Main.main(new String[]{"--jar", BadlionGradle.getCacheFile("badlionRemapped.jar").getAbsolutePath(), "--mappings", BadlionGradle.project.getRootDir().getAbsolutePath() + "/mappings"});
+        Main.main(new String[]{"--jar", BadlionGradle.getCacheFile(getProject(), "badlionRemapped.jar").getAbsolutePath(), "--mappings", getProject().getRootDir().getAbsolutePath() + "/mappings"});
     }
 
 }

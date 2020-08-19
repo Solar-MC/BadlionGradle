@@ -9,33 +9,31 @@ import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.tasks.TaskContainer;
 
-import java.io.*;
+import java.io.File;
 import java.util.function.Consumer;
 
 public class BadlionGradle implements Plugin<Project> {
 
-    public static Project project;
-
-    public static File getCacheFolder() {
+    public static File getCacheFolder(Project project) {
         return new File(project.getRootDir().getAbsolutePath() + "/.gradle/badlion-cache/");
     }
 
-    public static File getCacheFile(String fileName) {
-        return new File(getCacheFolder().getAbsolutePath() + "/" + fileName);
+    public static File getCacheFile(Project project, String fileName) {
+        return new File(getCacheFolder(project).getAbsolutePath() + "/" + fileName);
     }
 
     @Override
     public void apply(Project target) {
-        project = target;
-
         TaskContainer tasks = target.getTasks();
 
-        tasks.register("setupBadlionCode", SetupBadlionCodeTask.class);
+        tasks.register("setupBCP", SetupBCPTask.class);
         tasks.register("launchEnigma", LaunchEnigmaTask.class, task -> task.dependsOn("prepareJars"));
         tasks.register("prepareJars", PrepareJarsTask.class, task -> task.dependsOn("generateClient"));
         tasks.register("generateClient", GenerateClientTask.class, task -> task.dependsOn("grabVersionInfo"));
         tasks.register("grabVersionInfo", GrabVersionInfo.class);
         tasks.register("buildMappings", BuildMappingsTask.class);
+
+        target.getExtensions().create("badlion", BadlionGradleExtension.class, target);
     }
 
     /**

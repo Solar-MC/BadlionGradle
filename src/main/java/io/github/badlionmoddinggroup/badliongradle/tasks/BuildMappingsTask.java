@@ -15,10 +15,12 @@ public class BuildMappingsTask extends DefaultTask {
 
     @TaskAction
     public void run() throws Exception {
-        File file = new File(BadlionGradle.project.getRootDir() + "/build/build.tiny");
+        File file = new File(getProject().getRootDir() + "/build/officialtonamed.tiny");
+        File intermediaryLocation = BadlionGradle.getCacheFile(getProject(), "badlionIntermediaries.tiny");
         file.mkdirs();
         file.createNewFile();
-        Main.main("convert-mappings", "enigma", BadlionGradle.project.getRootDir() + "/mappings", "tiny_v2:official:named", BadlionGradle.project.getRootDir() + "/build/build.tiny");
+        Main.main("convert-mappings", "enigma", getProject().getRootDir() + "/mappings", "tiny_v2:official:named", getProject().getRootDir() + "/build/officialtonamed.tiny");
+//        net.fabricmc.stitch.Main.main(new String[]{"mergeTiny", file.getPath(), intermediaryLocation.getP});
     }
 
 }

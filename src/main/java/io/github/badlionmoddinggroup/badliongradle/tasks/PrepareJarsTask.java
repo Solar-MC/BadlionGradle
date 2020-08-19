@@ -36,7 +36,7 @@ public class PrepareJarsTask extends DefaultTask {
     public void run() throws IOException {
         //epic hardcoded for win
         Profiler.setState("Deleting old cache");
-        FileUtils.deleteDirectory(BadlionGradle.getCacheFolder());
+        FileUtils.deleteDirectory(BadlionGradle.getCacheFolder(getProject()));
 
         Profiler.setState("Copying original Badlion Jar");
         String clientJarLocation = "CLIENTJARLOCATION IS BROKEN";
@@ -48,15 +48,15 @@ public class PrepareJarsTask extends DefaultTask {
                 ///home/hayden/.wine/drive_c/users/hayden/Application Data/.minecraft
                 clientJarLocation = System.getProperty("user.home") + "/.wine/drive_c/users/" + System.getProperty("user.name") + "/Application Data/.minecraft/versions/BLClient18/BLClient.jar";
         }
-        FileUtils.copyFile(new File(clientJarLocation), new File(BadlionGradle.getCacheFolder().getAbsolutePath() + "/badlionOfficial.jar"));
+        FileUtils.copyFile(new File(clientJarLocation), new File(BadlionGradle.getCacheFolder(getProject()).getAbsolutePath() + "/badlionOfficial.jar"));
 
         Profiler.setState("Download mappings");
-        IOUtils.copy(new URL(MINECRAFT_MAPPINGS).openStream(), new FileOutputStream(BadlionGradle.getCacheFile("1.8.9.tiny")));
-        IOUtils.copy(new URL(BADLION_MAPPINGS).openStream(), new FileOutputStream(BadlionGradle.getCacheFile("badlionIntermediaries.tiny")));
+        IOUtils.copy(new URL(MINECRAFT_MAPPINGS).openStream(), new FileOutputStream(BadlionGradle.getCacheFile(getProject(),"1.8.9.tiny")));
+        IOUtils.copy(new URL(BADLION_MAPPINGS).openStream(), new FileOutputStream(BadlionGradle.getCacheFile(getProject(),"badlionIntermediaries.tiny")));
 
         Profiler.setState("Read Tiny files");
-        MappingSet minecraftMappings = TinyMappingFormat.DETECT.read(BadlionGradle.getCacheFile("1.8.9.tiny").toPath(), "official", "named");
-        MappingSet badlionMappings = TinyMappingFormat.DETECT.read(BadlionGradle.getCacheFile("badlionIntermediaries.tiny").toPath(), "official", "intermediary");
+        MappingSet minecraftMappings = TinyMappingFormat.DETECT.read(BadlionGradle.getCacheFile(getProject(),"1.8.9.tiny").toPath(), "official", "named");
+        MappingSet badlionMappings = TinyMappingFormat.DETECT.read(BadlionGradle.getCacheFile(getProject(),"badlionIntermediaries.tiny").toPath(), "official", "intermediary");
 
         Profiler.setState("MergeMappings");
         BadlionGradle.iterateClasses(minecraftMappings, classMapping -> {
@@ -87,8 +87,8 @@ public class PrepareJarsTask extends DefaultTask {
             }
         })).ignoreConflicts(true).build();
 
-        Path input = BadlionGradle.getCacheFile("badlionOfficial.jar").toPath();
-        Path output = BadlionGradle.getCacheFile("badlionRemappedWithMc.jar").toPath();
+        Path input = BadlionGradle.getCacheFile(getProject(),"badlionOfficial.jar").toPath();
+        Path output = BadlionGradle.getCacheFile(getProject(),"badlionRemappedWithMc.jar").toPath();
 
         Profiler.setState("Remap");
         try (OutputConsumerPath outputConsumer = new OutputConsumerPath.Builder(output).build()) {
@@ -104,7 +104,7 @@ public class PrepareJarsTask extends DefaultTask {
             remapper.finish();
         }
 
-        Path unMinecraftedOutput = BadlionGradle.getCacheFile("badlionRemapped.jar").toPath();
+        Path unMinecraftedOutput = BadlionGradle.getCacheFile(getProject(),"badlionRemapped.jar").toPath();
 
         Profiler.setState("Remove Minecraft");
         SourceRemover.main(new String[]{output.toAbsolutePath().toString(), unMinecraftedOutput.toAbsolutePath().toString()});
