@@ -38,10 +38,9 @@ public class PrepareJarsTask extends DefaultTask {
         Path input = BadlionGradle.getVersionCacheFile(getProject(), blcVer, "badlionOfficial.jar").toPath();
         Path output = BadlionGradle.getVersionCacheFile(getProject(), blcVer, "badlionRemappedWithMc.jar").toPath();
         Path strippedMinecraftOutput = BadlionGradle.getVersionCacheFile(getProject(), blcVer, "badlionRemapped.jar").toPath();
-        System.out.println("Preparing " + blcVer);
+        getProject().getLogger().info("Preparing " + blcVer);
 
         if (strippedMinecraftOutput.toFile().exists()) {
-            System.out.println("Jars already prepared!");
             return;
         }
 
