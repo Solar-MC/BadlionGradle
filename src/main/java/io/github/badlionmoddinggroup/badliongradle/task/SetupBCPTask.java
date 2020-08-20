@@ -11,7 +11,9 @@ public class SetupBCPTask extends DefaultTask {
 
     @TaskAction
     public void run() {
-        getProject().getProjectDir();
+        // src/main/java = patched location
+        // src/main/vanilla = decompiled code extract here
+        // patches/ = the patches... of course
     }
 
 }
