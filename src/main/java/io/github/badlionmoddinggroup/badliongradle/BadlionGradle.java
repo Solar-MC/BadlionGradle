@@ -15,10 +15,6 @@ import java.util.function.Consumer;
 
 public class BadlionGradle implements Plugin<Project> {
 
-    public static File getProjectCacheFolder(Project project) {
-        return new File(project.getRootDir().getAbsolutePath() + "/.gradle/badlion-cache/");
-    }
-
     public static File getVersionCacheFile(Project project, String version, String fileName) {
         return new File(getVersionCache(project, version),fileName);
     }
@@ -29,6 +25,10 @@ public class BadlionGradle implements Plugin<Project> {
 
     public static BadlionGradleExtension getGradleExtension(Project project) {
         return project.getExtensions().getByType(BadlionGradleExtension.class);
+    }
+
+    public static File getCacheFolder(Project project) {
+        return new File(project.getGradle().getGradleUserHomeDir(), "caches/badlion-gradle-cache/");
     }
 
     @Override

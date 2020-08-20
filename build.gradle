@@ -1,11 +1,11 @@
 plugins {
     id 'java'
     id 'maven-publish'
-	id 'maven'
+    id 'maven'
     id 'java-gradle-plugin'
     id 'idea'
     id 'eclipse'
-id 'com.jfrog.bintray' version '1.8.4'
+    id 'com.jfrog.bintray' version '1.8.4'
     id 'groovy'
 }
 
@@ -20,6 +20,7 @@ repositories {
         name = "Fabric"
         url = 'https://maven.fabricmc.net/'
     }
+    maven { url 'https://jitpack.io' }
     mavenCentral()
 }
 
@@ -27,34 +28,35 @@ dependencies {
     implementation gradleApi()
 
     // libraries
-    implementation ('commons-io:commons-io:2.6')
-    implementation ('org.zeroturnaround:zt-zip:1.13')
-    implementation ('com.google.code.gson:gson:2.8.5')
-    implementation ('com.google.guava:guava:28.0-jre')
+    implementation('commons-io:commons-io:2.6')
+    implementation('org.zeroturnaround:zt-zip:1.13')
+    implementation('com.google.code.gson:gson:2.8.5')
+    implementation('com.google.guava:guava:28.0-jre')
+    implementation 'com.github.kylestev:xdeltaencoder:v1.0.1'
 
     // game handling utils
-    implementation ('net.fabricmc:stitch:0.4.6+build.74') {
+    implementation('net.fabricmc:stitch:0.4.6+build.74') {
         exclude module: 'enigma'
     }
 
     // tinyfile management
-    implementation ('net.fabricmc:tiny-remapper:0.3.0.70')
-    implementation ('net.fabricmc:tiny-mappings-parser:0.2.2.14')
+    implementation('net.fabricmc:tiny-remapper:0.3.0.70')
+    implementation('net.fabricmc:tiny-mappings-parser:0.2.2.14')
 
-    implementation ('net.fabricmc:lorenz-tiny:2.0.0+build.2') {
+    implementation('net.fabricmc:lorenz-tiny:2.0.0+build.2') {
         transitive = false
     }
 
     // decompilers
-    implementation ('net.fabricmc:procyon-fabric-compilertools:0.5.35.13')
-    implementation ('org.jetbrains:intellij-fernflower:1.2.1.16')
+    implementation('net.fabricmc:procyon-fabric-compilertools:0.5.35.13')
+    implementation('org.jetbrains:intellij-fernflower:1.2.1.16')
 
     // source code remapping
-    implementation ('org.cadixdev:mercury:0.1.0.fabric-SNAPSHOT')
+    implementation('org.cadixdev:mercury:0.1.0.fabric-SNAPSHOT')
 
     // enigma
-    implementation ('cuchaz:enigma-swing:0.20+build.206')
-    implementation ('cuchaz:enigma-cli:0.20+build.206')
+    implementation('cuchaz:enigma-swing:0.20+build.206')
+    implementation('cuchaz:enigma-cli:0.20+build.206')
 
 }
 

@@ -1,6 +1,8 @@
 package io.github.badlionmoddinggroup.badliongradle.task;
 
 import io.github.badlionmoddinggroup.badliongradle.BadlionGradle;
+import io.github.badlionmoddinggroup.badliongradle.provider.BadlionProvider;
+import io.github.badlionmoddinggroup.badliongradle.provider.MinecraftProvider;
 import io.github.badlionmoddinggroup.badliongradle.util.Profiler;
 import io.github.badlionmoddinggroup.badliongradle.util.SourceRemover;
 import net.fabricmc.lorenztiny.TinyMappingFormat;
@@ -43,8 +45,7 @@ public class PrepareJarsTask extends DefaultTask {
             return;
         }
 
-        retrieveExistingClientJar(BadlionGradle.getGradleExtension(getProject()).badlionVersion, input);
-
+        generateClient(blcVer, BadlionGradle.getGradleExtension(getProject()).minecraftVersion);
         remap(input, output, setupRemapper(prepareMappings(blcVer)));
 
         Profiler.setState("Remove Minecraft");
@@ -86,32 +87,11 @@ public class PrepareJarsTask extends DefaultTask {
 
     /**
      *
-     * @param minecraftJarDownload the download link to the version of minecraft the badlion version uses
      * @param badlionVersion the version of Badlion to retrieve
      */
-    public boolean retrieveExistingClientJar(String minecraftJarDownload, String badlionVersion){
-        return false;
-    }
-
-    @Deprecated
-    public void retrieveExistingClientJar(String version, Path input) throws IOException {
-        Profiler.setState("Copying original Badlion Jar");
-        String clientJarLocation = null;
-        switch (BadlionGradle.OsChecker.getType()) {
-            case Windows:
-                clientJarLocation = System.getProperty("user.home") + "/AppData/Roaming/.minecraft/versions/BLClient18/BLClient.jar";
-                break;
-            case Linux:
-                clientJarLocation = System.getProperty("user.home") + "/.wine/drive_c/users/" + System.getProperty("user.name") + "/Application Data/.minecraft/versions/BLClient18/BLClient.jar";
-                break;
-            case MacOS:
-                System.out.println("Mac OS is not supported by badlion gradle until i get a tester");
-                return;
-            case Other:
-                System.out.println("Cannot find the badlion client jar for your OS");
-                return;
-        }
-        FileUtils.copyFile(new File(clientJarLocation), BadlionGradle.getVersionCacheFile(getProject(), version, input.getFileName().toString()));
+    public void generateClient(String badlionVersion, String minecraftVersion){
+        MinecraftProvider minecraftProvider = new MinecraftProvider(minecraftVersion, getProject());
+        new BadlionProvider(badlionVersion, getProject(), minecraftProvider);
     }
 
     private MappingSet prepareMappings(String blcVer) throws IOException {
