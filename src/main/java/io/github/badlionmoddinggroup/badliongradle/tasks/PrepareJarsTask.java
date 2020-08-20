@@ -37,14 +37,14 @@ public class PrepareJarsTask extends DefaultTask {
         Path output = BadlionGradle.getVersionCacheFile(getProject(), blcVer, "badlionRemappedWithMc.jar").toPath();
         Path strippedMinecraftOutput = BadlionGradle.getVersionCacheFile(getProject(), blcVer, "badlionRemapped.jar").toPath();
 
-        if(strippedMinecraftOutput.toFile().exists()){
+        if (strippedMinecraftOutput.toFile().exists()) {
             return;
         }
 
         Profiler.setState("Deleting old cache");
         FileUtils.deleteDirectory(BadlionGradle.getProjectCacheFolder(getProject()));
 
-        retrieveClientJar(BadlionGradle.getGradleExtension(getProject()).badlionVersion);
+        retrieveClientJar(BadlionGradle.getGradleExtension(getProject()).badlionVersion, input);
 
         remap(input, output, setupRemapper(prepareMappings(blcVer)));
 
@@ -56,9 +56,7 @@ public class PrepareJarsTask extends DefaultTask {
         Profiler.setState("Remap");
         try (OutputConsumerPath outputConsumer = new OutputConsumerPath.Builder(output).build()) {
             outputConsumer.addNonClassFiles(input, NonClassCopyMode.FIX_META_INF, remapper);
-
             remapper.readInputs(input);
-
             remapper.apply(outputConsumer);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -87,7 +85,7 @@ public class PrepareJarsTask extends DefaultTask {
         })).ignoreConflicts(true).build();
     }
 
-    public void retrieveClientJar(String version) throws IOException {
+    public void retrieveClientJar(String version, Path input) throws IOException {
         Profiler.setState("Copying original Badlion Jar");
         String clientJarLocation = "CLIENTJARLOCATION IS BROKEN";
         switch (BadlionGradle.OsChecker.getType()) {
@@ -97,14 +95,13 @@ public class PrepareJarsTask extends DefaultTask {
             case Linux:
                 clientJarLocation = System.getProperty("user.home") + "/.wine/drive_c/users/" + System.getProperty("user.name") + "/Application Data/.minecraft/versions/BLClient18/BLClient.jar";
         }
-        FileUtils.copyFile(new File(clientJarLocation), new File(BadlionGradle.getProjectCacheFolder(getProject()).getAbsolutePath() + "/badlionOfficial.jar"));
+        FileUtils.copyFile(new File(clientJarLocation), BadlionGradle.getVersionCacheFile(getProject(), version, input.getFileName().toString()));
     }
 
     private MappingSet prepareMappings(String blcVer) throws IOException {
         Profiler.setState("Download mappings");
         File oneeightnineMappingsFile = BadlionGradle.getVersionCacheFile(getProject(), blcVer, "1.8.9.tiny");
-        if(!oneeightnineMappingsFile.exists()){
-            oneeightnineMappingsFile.mkdirs();
+        if (!oneeightnineMappingsFile.exists()) {
             oneeightnineMappingsFile.createNewFile();
         }
         FileOutputStream oneeightnineMappings = new FileOutputStream(oneeightnineMappingsFile);

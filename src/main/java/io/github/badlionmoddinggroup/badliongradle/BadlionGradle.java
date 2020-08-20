@@ -20,7 +20,7 @@ public class BadlionGradle implements Plugin<Project> {
     }
 
     public static File getVersionCacheFile(Project project, String version, String fileName) {
-        return new File(getVersionCache(project, version).getAbsolutePath() + "/" + fileName);
+        return new File(getVersionCache(project, version),fileName);
     }
 
     public static File getVersionCache(Project project, String version) {
