@@ -1,4 +1,4 @@
-package io.github.badlionmoddinggroup.badliongradle.tasks;
+package io.github.badlionmoddinggroup.badliongradle.task;
 
 import org.gradle.api.DefaultTask;
 import org.gradle.api.tasks.TaskAction;

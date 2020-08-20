@@ -1,4 +1,4 @@
-package io.github.badlionmoddinggroup.badliongradle.tasks;
+package io.github.badlionmoddinggroup.badliongradle.task;
 
 import cuchaz.enigma.gui.Main;
 import io.github.badlionmoddinggroup.badliongradle.BadlionGradle;

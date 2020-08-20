@@ -1,6 +1,6 @@
 package io.github.badlionmoddinggroup.badliongradle;
 
-import io.github.badlionmoddinggroup.badliongradle.tasks.*;
+import io.github.badlionmoddinggroup.badliongradle.task.*;
 import org.cadixdev.lorenz.MappingSet;
 import org.cadixdev.lorenz.model.ClassMapping;
 import org.cadixdev.lorenz.model.InnerClassMapping;

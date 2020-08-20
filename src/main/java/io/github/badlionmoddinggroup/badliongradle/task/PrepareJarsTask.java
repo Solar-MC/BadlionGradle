@@ -1,4 +1,4 @@
-package io.github.badlionmoddinggroup.badliongradle.tasks;
+package io.github.badlionmoddinggroup.badliongradle.task;
 
 import io.github.badlionmoddinggroup.badliongradle.BadlionGradle;
 import io.github.badlionmoddinggroup.badliongradle.util.Profiler;
@@ -36,15 +36,14 @@ public class PrepareJarsTask extends DefaultTask {
         Path input = BadlionGradle.getVersionCacheFile(getProject(), blcVer, "badlionOfficial.jar").toPath();
         Path output = BadlionGradle.getVersionCacheFile(getProject(), blcVer, "badlionRemappedWithMc.jar").toPath();
         Path strippedMinecraftOutput = BadlionGradle.getVersionCacheFile(getProject(), blcVer, "badlionRemapped.jar").toPath();
+        System.out.println("Preparing " + blcVer);
 
         if (strippedMinecraftOutput.toFile().exists()) {
+            System.out.println("Jars already prepared!");
             return;
         }
 
-        Profiler.setState("Deleting old cache");
-        FileUtils.deleteDirectory(BadlionGradle.getProjectCacheFolder(getProject()));
-
-        retrieveClientJar(BadlionGradle.getGradleExtension(getProject()).badlionVersion, input);
+        retrieveExistingClientJar(BadlionGradle.getGradleExtension(getProject()).badlionVersion, input);
 
         remap(input, output, setupRemapper(prepareMappings(blcVer)));
 
@@ -85,27 +84,39 @@ public class PrepareJarsTask extends DefaultTask {
         })).ignoreConflicts(true).build();
     }
 
-    public void retrieveClientJar(String version, Path input) throws IOException {
+    /**
+     *
+     * @param minecraftJarDownload the download link to the version of minecraft the badlion version uses
+     * @param badlionVersion the version of Badlion to retrieve
+     */
+    public boolean retrieveExistingClientJar(String minecraftJarDownload, String badlionVersion){
+        return false;
+    }
+
+    @Deprecated
+    public void retrieveExistingClientJar(String version, Path input) throws IOException {
         Profiler.setState("Copying original Badlion Jar");
-        String clientJarLocation = "CLIENTJARLOCATION IS BROKEN";
+        String clientJarLocation = null;
         switch (BadlionGradle.OsChecker.getType()) {
             case Windows:
                 clientJarLocation = System.getProperty("user.home") + "/AppData/Roaming/.minecraft/versions/BLClient18/BLClient.jar";
                 break;
             case Linux:
                 clientJarLocation = System.getProperty("user.home") + "/.wine/drive_c/users/" + System.getProperty("user.name") + "/Application Data/.minecraft/versions/BLClient18/BLClient.jar";
+                break;
+            case MacOS:
+                System.out.println("Mac OS is not supported by badlion gradle until i get a tester");
+                return;
+            case Other:
+                System.out.println("Cannot find the badlion client jar for your OS");
+                return;
         }
         FileUtils.copyFile(new File(clientJarLocation), BadlionGradle.getVersionCacheFile(getProject(), version, input.getFileName().toString()));
     }
 
     private MappingSet prepareMappings(String blcVer) throws IOException {
         Profiler.setState("Download mappings");
-        File oneeightnineMappingsFile = BadlionGradle.getVersionCacheFile(getProject(), blcVer, "1.8.9.tiny");
-        if (!oneeightnineMappingsFile.exists()) {
-            oneeightnineMappingsFile.createNewFile();
-        }
-        FileOutputStream oneeightnineMappings = new FileOutputStream(oneeightnineMappingsFile);
-        IOUtils.copy(new URL(BadlionGradle.getGradleExtension(getProject()).minecraftMappingsUrl).openStream(), oneeightnineMappings);
+        IOUtils.copy(new URL(BadlionGradle.getGradleExtension(getProject()).minecraftMappingsUrl).openStream(), new FileOutputStream(BadlionGradle.getVersionCacheFile(getProject(), blcVer, "1.8.9.tiny")));
         IOUtils.copy(new URL(BadlionGradle.getGradleExtension(getProject()).badlionMappingsUrl).openStream(), new FileOutputStream(BadlionGradle.getVersionCacheFile(getProject(), blcVer, "badlionIntermediaries.tiny")));
 
         Profiler.setState("Read Tiny files");
