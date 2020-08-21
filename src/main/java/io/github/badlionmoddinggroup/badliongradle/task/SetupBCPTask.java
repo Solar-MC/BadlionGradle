@@ -32,13 +32,13 @@ public class SetupBCPTask extends DefaultTask {
 
         getProject().getLogger().lifecycle("Extracting Badlion Src");
 
-        File decompiledSrc = new File(getDecompilePath(badlionProvider.badlionVersion), "badlionRemapped.jar");
+        File decompiledSrc = new File(getDecompilePath(badlionProvider.badlionVersion), "badlionRemappedNamed.jar");
         ZipUtil.unpack(decompiledSrc, new File(getProject().getProjectDir(), "src/main/vanilla"));
         ZipUtil.unpack(decompiledSrc, new File(getProject().getProjectDir(), "src/main/java"));
     }
 
     private void decompileClient(BadlionProvider badlion) {
-        Path strippedMinecraftOutput = BadlionGradle.getVersionCacheFile(getProject(), badlion.badlionVersion, "badlionRemapped.jar").toPath();
+        Path strippedMinecraftOutput = BadlionGradle.getVersionCacheFile(getProject(), badlion.badlionVersion, "badlionRemappedNamed.jar").toPath();
         getDecompilePath(badlion.badlionVersion).mkdirs();
         ConsoleDecompiler.main(new String[]{strippedMinecraftOutput.toString(), getDecompilePath(badlion.badlionVersion).getAbsolutePath()});
     }

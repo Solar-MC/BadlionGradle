@@ -10,7 +10,6 @@ import net.fabricmc.tinyremapper.IMappingProvider;
 import net.fabricmc.tinyremapper.NonClassCopyMode;
 import net.fabricmc.tinyremapper.OutputConsumerPath;
 import net.fabricmc.tinyremapper.TinyRemapper;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.cadixdev.lorenz.MappingSet;
 import org.cadixdev.lorenz.model.ClassMapping;
@@ -20,7 +19,6 @@ import org.cadixdev.lorenz.model.MethodParameterMapping;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.tasks.TaskAction;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
@@ -36,20 +34,24 @@ public class PrepareJarsTask extends DefaultTask {
     public void run() throws IOException {
         String blcVer = BadlionGradle.getGradleExtension(getProject()).badlionVersion;
         Path input = BadlionGradle.getVersionCacheFile(getProject(), blcVer, "badlionOfficial.jar").toPath();
-        Path output = BadlionGradle.getVersionCacheFile(getProject(), blcVer, "badlionRemappedWithMc.jar").toPath();
-        Path strippedMinecraftOutput = BadlionGradle.getVersionCacheFile(getProject(), blcVer, "badlionRemapped.jar").toPath();
+        Path outputIntermediary = BadlionGradle.getVersionCacheFile(getProject(), blcVer, "badlionRemappedIntermediaryWithMc.jar").toPath();
+        Path outputNamed = BadlionGradle.getVersionCacheFile(getProject(), blcVer, "badlionRemappedNamedWithMc.jar").toPath();
+        Path badlionRemappedIntermediary = BadlionGradle.getVersionCacheFile(getProject(), blcVer, "badlionRemappedIntermediary.jar").toPath();
+        Path badlionRemappedNamed = BadlionGradle.getVersionCacheFile(getProject(), blcVer, "badlionRemappedNamed.jar").toPath();
         getProject().getLogger().info("Preparing " + blcVer);
 
         generateClient(blcVer, BadlionGradle.getGradleExtension(getProject()).minecraftVersion);
 
-        if (strippedMinecraftOutput.toFile().exists()) {
+        if (badlionRemappedIntermediary.toFile().exists()) {
             return;
         }
 
-        remap(input, output, setupRemapper(prepareMappings(blcVer)));
+        remap(input, outputIntermediary, setupRemapper(prepareMappings(blcVer, true)));
+        remap(input, outputNamed, setupRemapper(prepareMappings(blcVer, false)));
 
         Profiler.setState("Remove Minecraft");
-        SourceRemover.run(new String[]{output.toAbsolutePath().toString(), strippedMinecraftOutput.toAbsolutePath().toString()});
+        SourceRemover.run(new String[]{outputIntermediary.toAbsolutePath().toString(), badlionRemappedIntermediary.toAbsolutePath().toString()});
+        SourceRemover.run(new String[]{outputNamed.toAbsolutePath().toString(), badlionRemappedNamed.toAbsolutePath().toString()});
     }
 
     public void remap(Path input, Path output, TinyRemapper remapper) {
@@ -94,14 +96,15 @@ public class PrepareJarsTask extends DefaultTask {
         BadlionGradle.getGradleExtension(getProject()).badlionProvider = new BadlionProvider(badlionVersion, getProject(), minecraftProvider);
     }
 
-    private MappingSet prepareMappings(String blcVer) throws IOException {
+    private MappingSet prepareMappings(String blcVer, boolean onlyIntermediary) throws IOException {
         Profiler.setState("Download mappings");
         IOUtils.copy(new URL(BadlionGradle.getGradleExtension(getProject()).minecraftMappingsUrl).openStream(), new FileOutputStream(BadlionGradle.getVersionCacheFile(getProject(), blcVer, "1.8.9.tiny")));
-        IOUtils.copy(new URL(BadlionGradle.getGradleExtension(getProject()).badlionMappingsUrl).openStream(), new FileOutputStream(BadlionGradle.getVersionCacheFile(getProject(), blcVer, "badlionIntermediaries.tiny")));
+        IOUtils.copy(new URL(BadlionGradle.getGradleExtension(getProject()).badlionIntermediariesUrl).openStream(), new FileOutputStream(BadlionGradle.getVersionCacheFile(getProject(), blcVer, "badlionIntermediaries.tiny")));
+        IOUtils.copy(new URL(BadlionGradle.getGradleExtension(getProject()).badlionMappingsUrl).openStream(), new FileOutputStream(BadlionGradle.getVersionCacheFile(getProject(), blcVer, "badlionMappings.tiny")));
 
         Profiler.setState("Read Tiny files");
         MappingSet minecraftMappings = TinyMappingFormat.DETECT.read(BadlionGradle.getVersionCacheFile(getProject(), blcVer, "1.8.9.tiny").toPath(), "official", "named");
-        MappingSet badlionMappings = TinyMappingFormat.DETECT.read(BadlionGradle.getVersionCacheFile(getProject(), blcVer, "badlionIntermediaries.tiny").toPath(), "official", "intermediary");
+        MappingSet badlionMappings = onlyIntermediary ? TinyMappingFormat.DETECT.read(BadlionGradle.getVersionCacheFile(getProject(), blcVer, "badlionIntermediaries.tiny").toPath(), "official", "intermediary") : TinyMappingFormat.DETECT.read(BadlionGradle.getVersionCacheFile(getProject(), blcVer, "badlionMappings.tiny").toPath(), "official", "named");
 
         Profiler.setState("MergeMappings");
         BadlionGradle.iterateClasses(minecraftMappings, classMapping -> {
