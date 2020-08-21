@@ -35,11 +35,9 @@ public class BadlionGradle implements Plugin<Project> {
     public void apply(Project target) {
         TaskContainer tasks = target.getTasks();
 
+        tasks.register("prepareJars", PrepareJarsTask.class);
         tasks.register("setupBCP", SetupBCPTask.class, task -> task.dependsOn("prepareJars"));
         tasks.register("launchEnigma", LaunchEnigmaTask.class, task -> task.dependsOn("prepareJars"));
-        tasks.register("prepareJars", PrepareJarsTask.class, task -> task.dependsOn("generateClient"));
-        tasks.register("generateClient", GenerateClientTask.class, task -> task.dependsOn("grabVersionInfo"));
-        tasks.register("grabVersionInfo", GrabVersionInfo.class);
         tasks.register("buildMappings", BuildMappingsTask.class);
 
         target.getExtensions().create("badlion", BadlionGradleExtension.class, target);

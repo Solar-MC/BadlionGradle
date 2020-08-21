@@ -4,7 +4,7 @@ import com.google.common.io.Files;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import io.github.badlionmoddinggroup.badliongradle.BadlionGradle;
-import io.github.badlionmoddinggroup.badliongradle.minecraft.McVerManifest;
+import io.github.badlionmoddinggroup.badliongradle.util.McVerManifest;
 import io.github.badlionmoddinggroup.badliongradle.util.DownloadUtils;
 import org.gradle.api.Project;
 
@@ -76,6 +76,5 @@ public class MinecraftProvider {
             @SerializedName("sha1")
             public String sha1;
         }
-
     }
 }

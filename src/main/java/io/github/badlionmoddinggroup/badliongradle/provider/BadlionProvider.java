@@ -12,9 +12,9 @@ import java.net.URL;
 
 public class BadlionProvider {
 
-    public final String badlionVersion;
+    public String badlionVersion;
     private final Project project;
-    private final MinecraftProvider minecraftProvider;
+    public final MinecraftProvider minecraftProvider;
 
     public File patchFile;
     public File badlionClientFile;

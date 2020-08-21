@@ -1,4 +1,4 @@
-package io.github.badlionmoddinggroup.badliongradle.minecraft;
+package io.github.badlionmoddinggroup.badliongradle.util;
 
 import com.google.gson.annotations.SerializedName;
 

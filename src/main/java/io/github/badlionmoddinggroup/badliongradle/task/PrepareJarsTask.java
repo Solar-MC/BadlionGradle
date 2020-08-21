@@ -40,11 +40,12 @@ public class PrepareJarsTask extends DefaultTask {
         Path strippedMinecraftOutput = BadlionGradle.getVersionCacheFile(getProject(), blcVer, "badlionRemapped.jar").toPath();
         getProject().getLogger().info("Preparing " + blcVer);
 
+        generateClient(blcVer, BadlionGradle.getGradleExtension(getProject()).minecraftVersion);
+
         if (strippedMinecraftOutput.toFile().exists()) {
             return;
         }
 
-        generateClient(blcVer, BadlionGradle.getGradleExtension(getProject()).minecraftVersion);
         remap(input, output, setupRemapper(prepareMappings(blcVer)));
 
         Profiler.setState("Remove Minecraft");
@@ -90,7 +91,8 @@ public class PrepareJarsTask extends DefaultTask {
      */
     public void generateClient(String badlionVersion, String minecraftVersion){
         MinecraftProvider minecraftProvider = new MinecraftProvider(minecraftVersion, getProject());
-        new BadlionProvider(badlionVersion, getProject(), minecraftProvider);
+        System.out.println("Ramidzkh is love ramidzkh is life");
+        BadlionGradle.getGradleExtension(getProject()).badlionProvider = new BadlionProvider(badlionVersion, getProject(), minecraftProvider);
     }
 
     private MappingSet prepareMappings(String blcVer) throws IOException {
