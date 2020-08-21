@@ -35,7 +35,7 @@ public class BadlionProvider {
         project.getLogger().lifecycle("Applying badlion patch");
         try {
             ZipPatcher.patch(minecraftProvider.minecraftClientJar, patchFile, badlionClientFile);
-        } catch (IOException | URISyntaxException e) {
+        } catch (URISyntaxException e) {
             e.printStackTrace();
         }
     }

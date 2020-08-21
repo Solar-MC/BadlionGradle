@@ -22,29 +22,33 @@ public class ZipPatcher {
         CREATE.put("create", "true");
     }
 
-    public static void patch(File in, File patches, File out) throws IOException, URISyntaxException {
-        try (FileSystem inFileSystem = FileSystems.newFileSystem(in.toPath(), null);
-             FileSystem outFileSystem = FileSystems.newFileSystem(new URI("jar:" + out.toURI()), CREATE);
-             FileSystem patchFileSystem = FileSystems.newFileSystem(patches.toPath(), null)) {
-            for (Path origFile : Files.walk(inFileSystem.getPath("/")).collect(Collectors.toSet())) {
-                if (!Files.isRegularFile(origFile))
-                    continue;
-                Path patch = patchFileSystem.getPath(origFile.toString() + ".gdiff");
-                Path outFile = outFileSystem.getPath(origFile.toString());
-                Files.createDirectories(outFile.getParent());
-                if (Files.isRegularFile(patch)) {
-                    Files.write(outFile, patch(Files.readAllBytes(origFile), Files.readAllBytes(patch)));
-                } else {
-                    Files.copy(origFile, outFile);
-                }
-            }
-            for (Path patchFile : Files.walk(patchFileSystem.getPath("/")).collect(Collectors.toSet())) {
-                if (Files.isRegularFile(patchFile) && !patchFile.toString().endsWith(".gdiff")) {
-                    Path outFile = outFileSystem.getPath(patchFile.toString());
+    public static void patch(File in, File patches, File out) throws URISyntaxException {
+        try{
+            try (FileSystem inFileSystem = FileSystems.newFileSystem(in.toPath(), null);
+                 FileSystem outFileSystem = FileSystems.newFileSystem(new URI("jar:" + out.toURI()), CREATE);
+                 FileSystem patchFileSystem = FileSystems.newFileSystem(patches.toPath(), null)) {
+                for (Path origFile : Files.walk(inFileSystem.getPath("/")).collect(Collectors.toSet())) {
+                    if (!Files.isRegularFile(origFile))
+                        continue;
+                    Path patch = patchFileSystem.getPath(origFile.toString() + ".gdiff");
+                    Path outFile = outFileSystem.getPath(origFile.toString());
                     Files.createDirectories(outFile.getParent());
-                    Files.copy(patchFile, outFile);
+                    if (Files.isRegularFile(patch)) {
+                        Files.write(outFile, patch(Files.readAllBytes(origFile), Files.readAllBytes(patch)));
+                    } else {
+                        Files.copy(origFile, outFile);
+                    }
+                }
+                for (Path patchFile : Files.walk(patchFileSystem.getPath("/")).collect(Collectors.toSet())) {
+                    if (Files.isRegularFile(patchFile) && !patchFile.toString().endsWith(".gdiff")) {
+                        Path outFile = outFileSystem.getPath(patchFile.toString());
+                        Files.createDirectories(outFile.getParent());
+                        Files.copy(patchFile, outFile);
+                    }
                 }
             }
+        }catch (IOException e){
+            System.out.println("Silencing ioException in patching");
         }
     }
 
