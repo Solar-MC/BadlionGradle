@@ -91,7 +91,6 @@ public class PrepareJarsTask extends DefaultTask {
      */
     public void generateClient(String badlionVersion, String minecraftVersion){
         MinecraftProvider minecraftProvider = new MinecraftProvider(minecraftVersion, getProject());
-        System.out.println("Ramidzkh is love ramidzkh is life");
         BadlionGradle.getGradleExtension(getProject()).badlionProvider = new BadlionProvider(badlionVersion, getProject(), minecraftProvider);
     }
 

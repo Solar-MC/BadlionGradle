@@ -49,7 +49,6 @@ public class MinecraftProvider {
                     System.out.println("found minecraft version called " + version);
                 }
             }
-
             DownloadUtils.downloadIfChanged(new URL(mcVer.url), versionJson, project.getLogger());
             try (FileReader reader = new FileReader(versionJson)) {
                 versionInfo = GSON.fromJson(reader, MinecraftVersionInfo.class);
