@@ -13,9 +13,13 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 group 'io.github.badlionmoddinggroup'
-version '2.0.3'
+version '2.0.4'
 
 repositories {
+    maven {
+        name = "MinecraftForge"
+        url = uri("https://files.minecraftforge.net/maven/")
+    }
     maven {
         name = "Fabric"
         url = 'https://maven.fabricmc.net/'
@@ -49,7 +53,7 @@ dependencies {
 
     // decompilers
     implementation('net.fabricmc:procyon-fabric-compilertools:0.5.35.13')
-    implementation('org.jetbrains:intellij-fernflower:1.2.1.16')
+    implementation("net.minecraftforge:forgeflower:1.5.478.15")
 
     // source code remapping
     implementation('org.cadixdev:mercury:0.1.0.fabric-SNAPSHOT')
