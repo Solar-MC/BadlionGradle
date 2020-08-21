@@ -15,12 +15,12 @@ public class BuildMappingsTask extends DefaultTask {
 
     @TaskAction
     public void run() throws Exception {
-        File file = new File(getProject().getRootDir() + "/build/officialtonamed.tiny");
-        File intermediaryLocation = BadlionGradle.getVersionCacheFile(getProject(), BadlionGradle.getGradleExtension(getProject()).badlionVersion, "badlionIntermediaries.tiny");
-        file.mkdirs();
-        file.createNewFile();
-        Main.main("convert-mappings", "enigma", getProject().getRootDir() + "/mappings", "tiny_v2:official:named", getProject().getRootDir() + "/build/officialtonamed.tiny");
-//        net.fabricmc.stitch.Main.main(new String[]{"mergeTiny", file.getPath(), intermediaryLocation.getP});
+        File intermediaryV1Location = BadlionGradle.getVersionCacheFile(getProject(), BadlionGradle.getGradleExtension(getProject()).badlionVersion, "badlionIntermediaries.tiny");
+        File intermediaryV2Location = BadlionGradle.getVersionCacheFile(getProject(), BadlionGradle.getGradleExtension(getProject()).badlionVersion, "badlionIntermediariesv2.tiny");
+        String rawMappings = getProject().getRootDir() + "/build/rawMappings.tiny";
+        Main.main("convert-mappings", "enigma", getProject().getRootDir() + "/mappings", "tiny_v2:official:named", rawMappings);
+        Main.main("convert-mappings", "tiny_v1:official:intermediary", intermediaryV1Location.getAbsolutePath(), "tiny_v2:official:intermediary", intermediaryV2Location.getAbsolutePath());
+        net.fabricmc.stitch.Main.main(new String[]{"mergeTiny", intermediaryV2Location.getAbsolutePath(), rawMappings, getProject().getRootDir() + "/build/build.tiny"});
     }
 
 }
