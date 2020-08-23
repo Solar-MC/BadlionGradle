@@ -41,7 +41,7 @@ public class SetupBCPTask extends DefaultTask {
     private void decompileClient(BadlionProvider badlion) {
         Path strippedMinecraftOutput = BadlionGradle.getVersionCacheFile(getProject(), badlion.badlionVersion, "badlionRemappedNamed.jar").toPath();
         getDecompilePath(badlion.badlionVersion).mkdirs();
-        ConsoleDecompiler.main(new String[]{"-din=1", "-rbr=0", "-dgs=1", "-asc=1", "-rsy=0", "-iec=1", "-jvn=1", "-isl=0", "-iib=1", "-log=TRACE", "-ind=    ", strippedMinecraftOutput.toString(), getDecompilePath(badlion.badlionVersion).getAbsolutePath()});
+        ConsoleDecompiler.main(new String[]{"-din=1", "-rbr=1", "-dgs=1", "-asc=1", "-rsy=1", "-iec=1", "-jvn=1", "-isl=0", "-iib=1", "-log=TRACE", "-ind=    ", strippedMinecraftOutput.toString(), getDecompilePath(badlion.badlionVersion).getAbsolutePath()});
     }
 
 }
