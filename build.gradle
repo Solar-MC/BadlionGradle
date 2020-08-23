@@ -1,4 +1,5 @@
 plugins {
+    id 'com.github.johnrengelman.shadow' version '6.0.0'
     id 'java'
     id 'maven-publish'
     id 'maven'
@@ -13,7 +14,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 group 'io.github.badlionmoddinggroup'
-version '2.2.0'
+version '2.3.0'
 
 repositories {
     maven {
@@ -44,7 +45,6 @@ dependencies {
     }
 
     // tinyfile management
-    implementation('net.fabricmc:tiny-remapper:0.3.0.70')
     implementation('net.fabricmc:tiny-mappings-parser:0.2.2.14')
 
     implementation('net.fabricmc:lorenz-tiny:2.0.0+build.2') {
@@ -62,6 +62,16 @@ dependencies {
     implementation('cuchaz:enigma-swing:0.20+build.206')
     implementation('cuchaz:enigma-cli:0.20+build.206')
 
+    implementation 'org.ow2.asm:asm:8.0'
+    implementation 'org.ow2.asm:asm-commons:8.0'
+    implementation 'org.ow2.asm:asm-tree:8.0'
+    implementation 'org.ow2.asm:asm-util:8.0'
+}
+
+shadowJar {
+    baseName = 'badlionGradleShadowed'
+    classifier = ''
+    archiveVersion = ''
 }
 
 gradlePlugin {

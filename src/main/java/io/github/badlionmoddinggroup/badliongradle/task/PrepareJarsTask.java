@@ -10,7 +10,6 @@ import net.fabricmc.tinyremapper.IMappingProvider;
 import net.fabricmc.tinyremapper.NonClassCopyMode;
 import net.fabricmc.tinyremapper.OutputConsumerPath;
 import net.fabricmc.tinyremapper.TinyRemapper;
-import org.apache.commons.io.IOUtils;
 import org.cadixdev.lorenz.MappingSet;
 import org.cadixdev.lorenz.model.ClassMapping;
 import org.cadixdev.lorenz.model.FieldMapping;
@@ -18,6 +17,7 @@ import org.cadixdev.lorenz.model.MethodMapping;
 import org.cadixdev.lorenz.model.MethodParameterMapping;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.tasks.TaskAction;
+import org.zeroturnaround.zip.commons.IOUtils;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -104,6 +104,11 @@ public class PrepareJarsTask extends DefaultTask {
 
         Profiler.setState("Read Tiny files");
         MappingSet minecraftMappings = TinyMappingFormat.DETECT.read(BadlionGradle.getVersionCacheFile(getProject(), blcVer, "1.8.9.tiny").toPath(), "official", "named");
+        if(onlyIntermediary){
+            System.out.println("Reading Intermediary BLC Mappings");
+        }else{
+            System.out.println("Reading Named & Intermediary BLC Mappings");
+        }
         MappingSet badlionMappings = onlyIntermediary ? TinyMappingFormat.DETECT.read(BadlionGradle.getVersionCacheFile(getProject(), blcVer, "badlionIntermediaries.tiny").toPath(), "official", "intermediary") : TinyMappingFormat.DETECT.read(BadlionGradle.getVersionCacheFile(getProject(), blcVer, "badlionMappings.tiny").toPath(), "official", "named");
 
         Profiler.setState("MergeMappings");
