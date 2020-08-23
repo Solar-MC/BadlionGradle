@@ -13,7 +13,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 group 'io.github.badlionmoddinggroup'
-version '2.1.0'
+version '2.1.1'
 
 repositories {
     maven {
